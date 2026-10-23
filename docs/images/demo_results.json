@@ -1,0 +1,48 @@
+{
+  "parameters": "PlateParams defaults; no per-image tuning",
+  "note": "Candidate selection is not a ground-truth accuracy evaluation.",
+  "results": [
+    {
+      "sample": "01.png",
+      "plate_found": true,
+      "candidate_count": 7,
+      "best_score": 0.6945395169786135,
+      "best_char_count": 4
+    },
+    {
+      "sample": "02.png",
+      "plate_found": true,
+      "candidate_count": 6,
+      "best_score": 0.804902660875098,
+      "best_char_count": 7
+    },
+    {
+      "sample": "03.jpg",
+      "plate_found": true,
+      "candidate_count": 22,
+      "best_score": 0.7863180797887562,
+      "best_char_count": 12
+    },
+    {
+      "sample": "04.jpg",
+      "plate_found": true,
+      "candidate_count": 5,
+      "best_score": 0.6340299325950292,
+      "best_char_count": 3
+    },
+    {
+      "sample": "05.jpg",
+      "plate_found": true,
+      "candidate_count": 6,
+      "best_score": 0.7723581500888025,
+      "best_char_count": 11
+    },
+    {
+      "sample": "06.jpg",
+      "plate_found": true,
+      "candidate_count": 5,
+      "best_score": 0.7034662575621473,
+      "best_char_count": 4
+    }
+  ]
+}
