@@ -1,6 +1,6 @@
 # OpenCV | 차량 번호판 검출 및 파라미터 실험 GUI
 
-[발표자료 PDF](docs/presentation/project-report.pdf) · [개발 과정과 실험 기록](docs/PROJECT_NOTES.md) · [설치 및 실행](#설치-및-실행)
+[개발 과정과 실험 기록](docs/PROJECT_NOTES.md) · [설치 및 실행](#설치-및-실행)
 
 차량 이미지에서 번호판 영역을 찾고, 기울기를 보정한 이미지를 추출하는 시스템프로그래밍 전공 수업의 개인 프로젝트입니다. 딥러닝 없이 **문자 후보의 크기·간격·정렬을 분석해 번호판 후보를 선택**하고, PySide6 GUI에서 파라미터와 중간 처리 결과를 비교하도록 구성했습니다.
 
@@ -18,9 +18,9 @@
 | 핵심 기술 | OpenCV 전처리, Contour 분석, 문자 그룹화, 후보 점수화, PySide6 |
 | 구현 범위 | 번호판 영역 검출·추출. 문자 내용을 읽는 OCR은 미포함 |
 
-![발표 당시 GUI에서 파라미터를 조절하며 번호판을 추출한 화면](docs/presentation/page-19.png)
+![입력·검출 결과·번호판 추출·슬라이더를 한 화면에서 비교하는 GUI](docs/images/gui-front.png)
 
-발표 당시 이미지별로 파라미터를 조정한 실험 화면입니다. 현재 기본값을 고정한 실행 결과는 [현재 코드 실행 기록](#현재-코드-실행-기록)에 별도로 정리했습니다.
+입력 이미지와 검출 결과를 나란히 보고, 아래에서 번호판 추출 결과와 파라미터를 확인합니다. 위 화면은 수업 당시 수동 조정한 결과입니다. 현재 기본값을 고정한 실행 결과는 [현재 코드 실행 기록](#현재-코드-실행-기록)에 별도로 정리했습니다.
 
 ## 본인 담당 및 개발 과정
 
@@ -62,7 +62,13 @@ flowchart TD
 
 너비를 960px로 통일한 뒤 Gray 변환, Top-hat·Black-hat, CLAHE, Gaussian Blur, Adaptive Threshold를 적용합니다. 문자와 배경의 대비를 조절하고 이진 영상에서 윤곽선을 찾습니다.
 
-![발표자료의 원본·CLAHE·이진화·Morphology 비교](docs/presentation/page-07.png)
+| 원본 | CLAHE |
+| :---: | :---: |
+| ![원본 차량 이미지](docs/images/preprocess-original.png) | ![국부 대비를 보정한 영상](docs/images/preprocess-clahe.png) |
+| **Adaptive Threshold** | **Morphology Close** |
+| ![문자 후보 추출에 사용하는 이진 영상](docs/images/preprocess-threshold.png) | ![커널에 따른 연결 효과를 비교하는 영상](docs/images/preprocess-morphology.png) |
+
+CLAHE로 국부 대비를 보정하고 이진화로 윤곽선 후보를 분리합니다. Morphology를 크게 적용하면 번호판 외의 배경도 연결될 수 있으므로 중간 영상을 함께 확인하도록 했습니다.
 
 Morphology Close는 비교 화면을 위해 별도로 계산합니다. 현재 문자 후보 검출은 Adaptive Threshold 결과를 사용하므로 Morphology 커널 슬라이더는 후보 계산에 직접 반영되지 않습니다.
 
@@ -80,23 +86,23 @@ GUI에서 이진화·면적·종횡비를 조절하고 Gray, CLAHE, Threshold, �
 
 ## 실험 자료
 
-발표자료에는 주간, 저조도, 복잡한 배경, 기울어진 번호판을 대상으로 GUI에서 설정을 조정한 실험이 담겨 있습니다. 아래는 당시 기록이며 현재 기본값의 일괄 검출 성능과 구분합니다.
+주간, 저조도, 복잡한 배경, 기울어진 번호판을 대상으로 설정을 조정하며 비교했습니다. 아래 링크는 당시 GUI 캡처입니다. 이미지마다 설정이 다르므로 기본값의 일괄 검출 성능과 구분합니다.
+
+| 조건 | 관찰한 결과 | 화면 |
+| :--- | :--- | :--- |
+| 정면 | 문자 배열이 선명한 번호판 선택 및 추출 | [보기](docs/images/gui-front.png) |
+| 약한 기울기 | 기울어진 번호판 선택 및 회전 보정 | [보기](docs/images/gui-tilted.png) |
+| 복잡한 배경 | 여러 후보 중 번호판 영역 선택 | [보기](docs/images/gui-complex.png) |
+| 저조도 | 이진화 조건을 조절해 번호판 영역 선택 | [보기](docs/images/gui-night.png) |
+| 지하주차장 | 조명·반사가 있는 이미지에서 번호판 추출 | [보기](docs/images/gui-indoor.png) |
+| 큰 기울기 | 번호판 일부와 그릴이 섞여 불완전한 추출 | [보기](docs/images/gui-failure.png) |
 
 <details>
-<summary><strong>GUI 구성과 조작 화면 보기</strong></summary>
+<summary><strong>큰 기울기에서의 실패 사례 보기</strong></summary>
 
-![발표자료의 GUI 구성](docs/presentation/page-11.png)
+![기울어진 번호판 전체를 추출하지 못한 GUI 기록](docs/images/gui-failure.png)
 
-</details>
-
-<details>
-<summary><strong>복잡한 배경·저조도·큰 기울기 실험 보기</strong></summary>
-
-![복잡한 배경과 저조도 실험](docs/presentation/page-20.png)
-
-![지하주차장과 큰 기울기 실험](docs/presentation/page-21.png)
-
-이미지별 슬라이더 설정이 다르며 큰 기울기에서의 실패 사례도 포함합니다. 당시 코드 버전과 모든 설정을 별도 실행 기록으로 확정하지는 않았습니다.
+문자 일부와 그릴의 반복 패턴이 함께 후보로 묶여 번호판 전체를 추출하지 못했습니다. 프로그램이 후보를 찾았다고 표시해도 실제 번호판 영역을 올바르게 선택했는지 확인해야 합니다. 당시 코드 버전과 모든 설정을 별도 실행 기록으로 확정하지는 않았습니다.
 
 </details>
 
@@ -160,7 +166,7 @@ python -m venv .venv
 └── docs/
     ├── PROJECT_NOTES.md          # 개발 과정과 실험 설명
     ├── images/                  # 현재 코드의 검출·추출 결과
-    └── presentation/            # 발표자료 PDF와 발췌 페이지
+    └── presentation/            # 원본 캡처의 출처·구성 안내
 ```
 
 ## 현재 구현의 범위
@@ -175,10 +181,8 @@ python -m venv .venv
 
 ## 원본 자료
 
-- [전공 수업 발표자료 PDF](docs/presentation/project-report.pdf)
-- [발표자료의 전체 처리 흐름](docs/presentation/page-05.png)
-- [발표자료의 코드 구조 개선](docs/presentation/page-16.png)
+- [문서에 사용한 화면 이미지 안내](docs/presentation/README.md)
 - [개발 과정 및 실험 상세](docs/PROJECT_NOTES.md)
 - [샘플 이미지 안내](samples/README.md)
 
-발표자료와 이미지는 프로젝트 작성자가 이 저장소에서 재사용하도록 제공했습니다.
+화면 이미지는 작성자가 제작한 발표자료의 원본 이미지에서 추출했습니다. 설명은 저장소에 맞게 다시 정리했으며 발표 PDF와 전체 슬라이드 이미지는 포함하지 않습니다.
