@@ -1,0 +1,27 @@
+# Python and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Editor and operating system files
+.idea/
+.vscode/
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Local outputs and duplicate archive
+/results/
+/samples.zip
+/docs/PUBLISHING.md
+
+# Existing coursework documents retained locally
+/*.pdf
+/*.pptx
+/발표 대본 - 최종.txt
+
+# Local configuration
+.env
+.env.*
