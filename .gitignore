@@ -18,8 +18,10 @@ Desktop.ini
 /docs/PUBLISHING.md
 
 # Existing coursework documents retained locally
-/*.pdf
-/*.pptx
+*.pdf
+*.pptx
+/docs/presentation/page-*.png
+/docs/images/gui-layout.png
 /발표 대본 - 최종.txt
 
 # Local configuration
